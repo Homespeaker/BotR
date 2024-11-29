@@ -133,13 +133,13 @@ def step5(message):
         else:
             sss.append(telebot.types.InputMediaVideo(open(photo, 'rb'), caption=txt))
     for z in range(len(massive_big)):
-        # try:
+        try:
             if not p: 
                 botspam.send_message(massive_big[z][0], txt)
             else:
                 botspam.send_media_group(massive_big[z][0], sss)
-        # except:
-        #     print(-1)
+        except:
+            print(-1)
     p = True
     bot.send_message(message.chat.id, "Отправка окончена, для новой рассылки нажми /start")#telebot.types.InputMediaVideo(open(photo, 'rb'), caption=txt)
     
