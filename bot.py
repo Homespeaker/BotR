@@ -120,7 +120,7 @@ def step4(message):
 
 def step5(message):
     global p
-    conn = sqlite3.connect('chatgpt_database.db')
+    conn = sqlite3.connect('../chatgpt_database.db')
     cursor = conn.cursor()
     cursor.execute("SELECT tid FROM Users")
     massive_big = cursor.fetchall()#этот метод вернет вам все элементы в одном кортеже. Данные из строк будут представлены как вложенные кортежи
