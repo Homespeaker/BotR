@@ -22,11 +22,11 @@ sc = 1
 
 #Клава step2
 step2_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-photo_button = types.KeyboardButton('Добавить фото')
+photo_button = types.KeyboardButton('Добавить медиа')
 step2_keyboard.add(photo_button)
 text_button = types.KeyboardButton('Изменить текст')
 step2_keyboard.add(text_button)
-no_photo_button = types.KeyboardButton('Не добавлять фото')
+no_photo_button = types.KeyboardButton('Не добавлять медиа')
 step2_keyboard.add(no_photo_button)
 
 
@@ -47,7 +47,7 @@ def step2(message):
     global txt
     txt = message.text
     bot.send_message(message.chat.id, f"<pre language='txt'>{txt}</pre>", parse_mode='HTML')
-    bot.send_message(message.chat.id, 'Проверь текст, если все нормально, то ты можешь загрузить несколько фото.', reply_markup=step2_keyboard)
+    bot.send_message(message.chat.id, 'Проверь текст, если все нормально, то ты можешь загрузить несколько фото или видео.\nПри загрузке видео учти, что оно должно быть менее 50мб и находиться в формате .mp4!', reply_markup=step2_keyboard)
     bot.register_next_step_handler(message, step25)
 
 def step25(message):
@@ -55,11 +55,11 @@ def step25(message):
     if message.text == 'Изменить текст':
         bot.send_message(message.chat.id, "Введи новый текст")
         bot.register_next_step_handler(message, step2)
-    elif message.text == 'Добавить фото':
-        bot.send_message(message.chat.id, "Отправляй по одному фото, как только фото закончатся, нажми на кнопку и мы перейдем к следующему шагу")
+    elif message.text == 'Добавить медиа':
+        bot.send_message(message.chat.id, "Отправляй по одному медиа, как только медиа закончатся, нажми на кнопку и мы перейдем к следующему шагу")
         bot.register_next_step_handler(message, step3)
-    elif message.text == 'Не добавлять фото':
-        bot.send_message(message.chat.id, "Пропускаю ввод фото...")
+    elif message.text == 'Не добавлять медиа':
+        bot.send_message(message.chat.id, "Пропускаю ввод медиа...")
         bot.send_message(message.chat.id, "Начинаю отправку пользователям")
         p = False
         step5(message)
@@ -84,7 +84,7 @@ def step3(message):
     with open(save_path, 'wb') as new_file:
         new_file.write(downloaded_file)
         
-    bot.send_message(message.chat.id, "Фото добавлено, если нужно добавить еще, просто отправь мне фото, иначе нажми на кнопку", reply_markup=no_keyboard)
+    bot.send_message(message.chat.id, "Медиа добавлено, если нужно добавить еще, просто отправь мне медиа, иначе нажми на кнопку", reply_markup=no_keyboard)
     bot.register_next_step_handler(message, step35)
         
         
@@ -133,10 +133,13 @@ def step5(message):
         else:
             sss.append(telebot.types.InputMediaVideo(open(photo, 'rb'), caption=txt))
     for z in range(len(massive_big)):
+        # try:
             if not p: 
                 botspam.send_message(massive_big[z][0], txt)
             else:
                 botspam.send_media_group(massive_big[z][0], sss)
+        # except:
+        #     print(-1)
     p = True
     bot.send_message(message.chat.id, "Отправка окончена, для новой рассылки нажми /start")#telebot.types.InputMediaVideo(open(photo, 'rb'), caption=txt)
     
