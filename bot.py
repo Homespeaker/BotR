@@ -72,13 +72,13 @@ def step3(message):
         photo = message.photo[-1]
         file_info = bot.get_file(photo.file_id)
         downloaded_file = bot.download_file(file_info.file_path)
-        save_path = f'BotR/img/{sc}' + '.jpg'
+        save_path = f'../BotR/img/{sc}' + '.jpg'
         photos.append(save_path)
     except:
         video = message.video
         file_info = bot.get_file(video.file_id)
         downloaded_file = bot.download_file(file_info.file_path)
-        save_path = f'BotR/img/{sc}' + '.mp4'
+        save_path = f'../BotR/img/{sc}' + '.mp4'
         photos.append(save_path)
     sc += 1
     with open(save_path, 'wb') as new_file:
@@ -120,12 +120,10 @@ def step4(message):
 
 def step5(message):
     global p
-    conn = sqlite3.connect('../chatgpt_database.db')
+    conn = sqlite3.connect('chatgpt_database.db')
     cursor = conn.cursor()
     cursor.execute("SELECT tid FROM Users")
-    massive_big = cursor.fetchall()#этот метод вернет вам все элементы в одном кортеже. Данные из строк будут представлены как вложенные кортежи
-    #перебираем кортеж с кортежами внутри, также печатаем элементы
-    sss = [   ]
+    massive_big = cursor.fetchall()
     sss = []
     for photo in photos:
         if '.jpg' in photo:
@@ -134,12 +132,13 @@ def step5(message):
             sss.append(telebot.types.InputMediaVideo(open(photo, 'rb'), caption=txt))
     for z in range(len(massive_big)):
         try:
+            print(massive_big[z][0])
             if not p: 
-                botspam.send_message(massive_big[z][0], txt)
+                botspam.send_message(int(massive_big[z][0]), txt)
             else:
-                botspam.send_media_group(massive_big[z][0], sss)
+                botspam.send_media_group(int(massive_big[z][0]), sss)
         except:
-            print(-1)
+            bot.send_message(message.chat.id, "-")
     p = True
     bot.send_message(message.chat.id, "Отправка окончена, для новой рассылки нажми /start")#telebot.types.InputMediaVideo(open(photo, 'rb'), caption=txt)
     
