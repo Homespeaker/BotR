@@ -214,14 +214,14 @@ def step6(message):
             try:
                 if knpk:
                     if not p: 
-                        bot.send_message(message.chat.id, txt, reply_markup=ssilki)
+                        botspam.send_message(massive_big[z][0], txt, reply_markup=ssilki)
                     else:
-                        bot.send_media_group(message.chat.id, sss, reply_markup=ssilki)
+                        botspam.send_media_group(massive_big[z][0], sss, reply_markup=ssilki)
                 else:
                     if not p: 
-                        bot.send_message(message.chat.id, txt)
+                        botspam.send_message(massive_big[z][0], txt)
                     else:
-                        bot.send_media_group(message.chat.id, sss)
+                        botspam.send_media_group(massive_big[z][0], sss)
                 nice += 1
             except:
                 lost += 1
