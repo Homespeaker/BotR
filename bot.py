@@ -13,11 +13,14 @@ botspam = telebot.TeleBot(TOKENTWO)
 global photos
 global txt
 global p
+global knpk 
+knpk = False
 txt = ''
 photos = []
 p = True
 sc = 1
-
+text_on = ""
+ssilka = ""
 
 
 #Клава step2
@@ -35,12 +38,53 @@ no_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=
 n_photo_button = types.KeyboardButton('Перейти к следующему шагу')
 no_keyboard.add(n_photo_button)
 
+# хелп клава для ссылкок
+step_s = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+yes = types.KeyboardButton('Да')
+step_s.add(yes)
+no = types.KeyboardButton('Нет')
+step_s.add(no)
+
+# Доп клава, для ссылок
+ssilki = types.InlineKeyboardMarkup()
+knopka_ssilki = types.InlineKeyboardButton(text_on, url=ssilka)
+ssilki.add(knopka_ssilki)
+
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     txt = ''
     photos = []
     p = True
-    bot.send_message(message.chat.id, 'Начинаем рассылку, отправь мне текст рассылки. ')
+    bot.send_message(message.chat.id, "Ты будешь добавлять кнопку для ссылки?", reply_markup=step_s)
+    bot.register_next_step_handler(message, proverka_knopki)
+
+def proverka_knopki(message):
+    if message.text == 'Да':
+        global knpk
+        knpk = True
+        bot.send_message(message.chat.id, "Введите текст, который будет на кнопке")
+        bot.register_next_step_handler(message, knopka_step1)
+    else:
+        global ssilki
+        ssilki = ""
+        global text_on
+        text_on = ""
+        texxt(message)
+
+def knopka_step1(message):
+    global text_on
+    text_on = message.text
+    bot.send_message(message.chat.id, "Теперь отправь мне ссылку, которая будет внутри кнопки")
+    bot.register_next_step_handler(message, knopka_step2)
+
+def knopka_step2(message):
+    global ssilka
+    ssilka = message.text
+    bot.send_message(message.chat.id, "Отлично, кнопка добавлена")
+    texxt(message)
+
+def texxt(message):
+    bot.send_message(message.chat.id, 'Отправь мне текст рассылки. ')
     bot.register_next_step_handler(message, step2)
 
 def step2(message):
@@ -91,7 +135,6 @@ def step3(message):
 
 def step35(message):
     if message.text == "Перейти к следующему шагу":
-        bot.send_message(message.chat.id, "Начинаю отправку пользователям")
         step5(message)
     else:
         step3(message)
@@ -120,28 +163,74 @@ def step4(message):
 
 def step5(message):
     global p
-    conn = sqlite3.connect('chatgpt_database.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT tid FROM Users")
-    massive_big = cursor.fetchall()
     sss = []
+    ssilki = types.InlineKeyboardMarkup()
+    knopka_ssilki = types.InlineKeyboardButton(text_on, url=ssilka)
+    ssilki.add(knopka_ssilki)
     for photo in photos:
         if '.jpg' in photo:
             sss.append(telebot.types.InputMediaPhoto(open(photo, 'rb'), caption=txt))
         else:
             sss.append(telebot.types.InputMediaVideo(open(photo, 'rb'), caption=txt))
-    for z in range(len(massive_big)):
-        try:
-            print(massive_big[z][0])
+    try:
+        if knpk:
             if not p: 
-                botspam.send_message(int(massive_big[z][0]), txt)
+                bot.send_message(message.chat.id, txt, reply_markup=ssilki)
             else:
-                botspam.send_media_group(int(massive_big[z][0]), sss)
-        except:
-            bot.send_message(message.chat.id, "-")
-    p = True
-    bot.send_message(message.chat.id, "Отправка окончена, для новой рассылки нажми /start")#telebot.types.InputMediaVideo(open(photo, 'rb'), caption=txt)
-    
+                bot.send_media_group(message.chat.id, sss, reply_markup=ssilki)
+        else:
+            if not p: 
+                bot.send_message(message.chat.id, txt)
+            else:
+                bot.send_media_group(message.chat.id, sss)
+    except:
+        print(-1)
+        bot.send_message(message.chat.id, "Вы указали некорректную ссылку в кнопке, давайте начнем сначала")
+        handle_start(message)
+    bot.send_message(message.chat.id, "Такое сообщение будет отправлено. Если вы согласны, то нажмите Да, иначе Нет", reply_markup=step_s)
+    bot.register_next_step_handler(message, step6)
+
+
+def step6(message):
+    if message.text == 'Да':
+        ssilki = types.InlineKeyboardMarkup()
+        knopka_ssilki = types.InlineKeyboardButton(text_on, url=ssilka)
+        ssilki.add(knopka_ssilki)
+        bot.send_message(message.chat.id, "Начинаю отправку пользователям")
+        global p
+        lost = 0
+        nice = 0
+        conn = sqlite3.connect('../chatgpt_database.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT tid FROM Users")
+        massive_big = cursor.fetchall()
+        sss = []
+        for photo in photos:
+            if '.jpg' in photo:
+                sss.append(telebot.types.InputMediaPhoto(open(photo, 'rb'), caption=txt))
+            else:
+                sss.append(telebot.types.InputMediaVideo(open(photo, 'rb'), caption=txt))
+        for z in range(len(massive_big)):
+            try:
+                if knpk:
+                    if not p: 
+                        bot.send_message(message.chat.id, txt, reply_markup=ssilki)
+                    else:
+                        bot.send_media_group(message.chat.id, sss, reply_markup=ssilki)
+                else:
+                    if not p: 
+                        bot.send_message(message.chat.id, txt)
+                    else:
+                        bot.send_media_group(message.chat.id, sss)
+                nice += 1
+            except:
+                lost += 1
+        p = True
+        bot.send_message(message.chat.id, "Отправка окончена:")#telebot.types.InputMediaVideo(open(photo, 'rb'), caption=txt)
+        bot.send_message(message.chat.id, f"lost requests: {lost}\nnice requestes: {nice}")
+        bot.send_message(message.chat.id, "/start to start new malling") 
+    else:
+        handle_start(message)
 
 
 
