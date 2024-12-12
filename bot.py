@@ -205,6 +205,7 @@ def step6(message):
         cursor.execute("SELECT tid FROM Users")
         massive_big = cursor.fetchall()
         sss = []
+        no_send = []
         for photo in photos:
             if '.jpg' in photo:
                 sss.append(telebot.types.InputMediaPhoto(open(photo, 'rb'), caption=txt))
@@ -224,10 +225,10 @@ def step6(message):
                         botspam.send_media_group(massive_big[z][0], sss)
                 nice += 1
             except:
-                no.append(massive_big[z][0])
+                no_send.append(massive_big[z][0])
                 lost += 1
         for i in range(1, 4):
-            for x in no:
+            for x in no_send:
                 try:
                     if knpk:
                         if not p: 
@@ -241,7 +242,7 @@ def step6(message):
                             botspam.send_media_group(massive_big[z][0], sss)
                     lost -= 1
                     nice += 1
-                    no.remove(x)
+                    no_send.remove(x)
                 except:
                     print(-1)
             
