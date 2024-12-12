@@ -224,7 +224,27 @@ def step6(message):
                         botspam.send_media_group(massive_big[z][0], sss)
                 nice += 1
             except:
+                no.append(massive_big[z][0])
                 lost += 1
+        for i in range(1, 4):
+            for x in no:
+                try:
+                    if knpk:
+                        if not p: 
+                            botspam.send_message(massive_big[z][0], txt, reply_markup=ssilki)
+                        else:
+                            botspam.send_media_group(massive_big[z][0], sss, reply_markup=ssilki)
+                    else:
+                        if not p: 
+                            botspam.send_message(massive_big[z][0], txt)
+                        else:
+                            botspam.send_media_group(massive_big[z][0], sss)
+                    lost -= 1
+                    nice += 1
+                    no.remove(x)
+                except:
+                    print(-1)
+            
         p = True
         bot.send_message(message.chat.id, "Отправка окончена:")#telebot.types.InputMediaVideo(open(photo, 'rb'), caption=txt)
         bot.send_message(message.chat.id, f"lost requests: {lost}\nnice requestes: {nice}")
