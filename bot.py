@@ -3,6 +3,7 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeybo
 from telebot import types
 import openpyxl
 import sqlite3
+import os
 
 TOKEN = "7892036740:AAHqRp3BDJRq80K1Ld84NIIYTem8nF2QqMA"
 bot = telebot.TeleBot(TOKEN)
@@ -108,7 +109,16 @@ def step25(message):
         p = False
         step5(message)
 
-
+def path():
+    dire = os.path.abspath(__file__)
+    s = ""
+    t = False
+    for i in range(len(dire)-1, -1, -1):
+        if t:
+            s = dire[i] + s
+        if dire[i] == '/':
+            t = True
+    return s
 
 def step3(message):
     global sc
@@ -116,17 +126,19 @@ def step3(message):
         photo = message.photo[-1]
         file_info = bot.get_file(photo.file_id)
         downloaded_file = bot.download_file(file_info.file_path)
-        save_path = f'../BotR/img/{sc}' + '.jpg'
+        s = path()
+        save_path = f'{s}/img/{sc}.jpg'
         photos.append(save_path)
     except:
         video = message.video
         file_info = bot.get_file(video.file_id)
         downloaded_file = bot.download_file(file_info.file_path)
-        save_path = f'../BotR/img/{sc}' + '.mp4'
+        s = path()
+        save_path = f'{s}/img/{sc}.mp4'
         photos.append(save_path)
-    sc += 1
     with open(save_path, 'wb') as new_file:
         new_file.write(downloaded_file)
+    sc += 1
         
     bot.send_message(message.chat.id, "Медиа добавлено, если нужно добавить еще, просто отправь мне медиа, иначе нажми на кнопку", reply_markup=no_keyboard)
     bot.register_next_step_handler(message, step35)
