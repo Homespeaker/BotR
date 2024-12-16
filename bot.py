@@ -53,6 +53,13 @@ ssilki.add(knopka_ssilki)
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
+    global photos
+    global txt
+    global p
+    global knpk 
+    global text_on
+    global ssilka
+    global sc
     knpk = False
     txt = ''
     photos = []
@@ -268,6 +275,13 @@ def step6(message):
         bot.send_message(message.chat.id, f"lost requests: {lost}\nnice requestes: {nice}")
         bot.send_message(message.chat.id, "/start to start new malling") 
     else:
+        global photos
+        global txt
+        global p
+        global knpk 
+        global text_on
+        global ssilka
+        global sc
         knpk = False
         txt = ''
         photos = []
