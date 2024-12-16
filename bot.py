@@ -53,9 +53,13 @@ ssilki.add(knopka_ssilki)
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
+    knpk = False
     txt = ''
     photos = []
     p = True
+    sc = 1
+    text_on = ""
+    ssilka = ""
     bot.send_message(message.chat.id, "Ты будешь добавлять кнопку для ссылки?", reply_markup=step_s)
     bot.register_next_step_handler(message, proverka_knopki)
 
