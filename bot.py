@@ -264,6 +264,13 @@ def step6(message):
         bot.send_message(message.chat.id, f"lost requests: {lost}\nnice requestes: {nice}")
         bot.send_message(message.chat.id, "/start to start new malling") 
     else:
+        knpk = False
+        txt = ''
+        photos = []
+        p = True
+        sc = 1
+        text_on = ""
+        ssilka = ""
         handle_start(message)
 
 
