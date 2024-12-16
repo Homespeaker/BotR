@@ -259,6 +259,7 @@ def step6(message):
                     print(-1)
             
         p = True
+        knpk = False
         bot.send_message(message.chat.id, "Отправка окончена:")#telebot.types.InputMediaVideo(open(photo, 'rb'), caption=txt)
         bot.send_message(message.chat.id, f"lost requests: {lost}\nnice requestes: {nice}")
         bot.send_message(message.chat.id, "/start to start new malling") 
