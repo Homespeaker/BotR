@@ -269,26 +269,10 @@ def step6(message):
                 except:
                     print(-1)
             
-        p = True
-        knpk = False
         bot.send_message(message.chat.id, "Отправка окончена:")#telebot.types.InputMediaVideo(open(photo, 'rb'), caption=txt)
         bot.send_message(message.chat.id, f"lost requests: {lost}\nnice requestes: {nice}")
         bot.send_message(message.chat.id, "/start to start new malling") 
     else:
-        global photos
-        global txt
-        global p
-        global knpk 
-        global text_on
-        global ssilka
-        global sc
-        knpk = False
-        txt = ''
-        photos = []
-        p = True
-        sc = 1
-        text_on = ""
-        ssilka = ""
         handle_start(message)
 
 
