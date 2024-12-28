@@ -8,7 +8,7 @@ import os
 TOKEN = "7892036740:AAHqRp3BDJRq80K1Ld84NIIYTem8nF2QqMA"
 bot = telebot.TeleBot(TOKEN)
 
-TOKENTWO = "8043071049:AAFHNnu_eExj9LdYEBPeR1r4TpkRiwhitF4"
+TOKENTWO = "8043071049:AAGvLtjSugb6HIU2dkG_TxJkEDyhzr7enJA"
 botspam = telebot.TeleBot(TOKENTWO)
 
 global photos
