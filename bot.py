@@ -1,5 +1,5 @@
 import telebot
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardRemove
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardRemove, KeyboardButton, ReplyKeyboardMarkup
 from telebot import types
 import openpyxl
 import sqlite3
@@ -192,24 +192,25 @@ def step5(message):
     ssilki.add(knopka_ssilki)
     for photo in photos:
         if '.jpg' in photo:
-            sss.append(telebot.types.InputMediaPhoto(open(photo, 'rb'), caption=txt))
+            sss.append(telebot.types.InputMediaPhoto(open(photo, 'rb')))
         else:
-            sss.append(telebot.types.InputMediaVideo(open(photo, 'rb'), caption=txt))
-    try:
-        if knpk:
-            if not p: 
-                bot.send_message(message.chat.id, txt, reply_markup=ssilki)
-            else:
-                bot.send_media_group(message.chat.id, sss, reply_markup=ssilki)
+            sss.append(telebot.types.InputMediaVideo(open(photo, 'rb')))
+    # try:
+    if knpk:
+        if not p: 
+            bot.send_message(message.chat.id, txt, reply_markup=ssilki)
         else:
-            if not p: 
-                bot.send_message(message.chat.id, txt)
-            else:
-                bot.send_media_group(message.chat.id, sss)
-    except:
-        print(-1)
-        bot.send_message(message.chat.id, "Вы указали некорректную ссылку в кнопке, давайте начнем сначала")
-        handle_start(message)
+            bot.send_media_group(message.chat.id, sss)
+            bot.send_message(message.chat.id, txt, reply_markup=ssilki)
+    else:
+        if not p: 
+            bot.send_message(message.chat.id, txt)
+        else:
+            bot.send_media_group(message.chat.id, sss)
+    # except:
+    #     print(-1)
+    #     bot.send_message(message.chat.id, "Вы указали некорректную ссылку в кнопке, давайте начнем сначала")
+    #     handle_start(message)
     bot.send_message(message.chat.id, "Такое сообщение будет отправлено. Если вы согласны, то нажмите Да, иначе Нет", reply_markup=step_s)
     bot.register_next_step_handler(message, step6)
 
@@ -240,7 +241,8 @@ def step6(message):
                     if not p: 
                         botspam.send_message(massive_big[z][0], txt, reply_markup=ssilki)
                     else:
-                        botspam.send_media_group(massive_big[z][0], sss, reply_markup=ssilki)
+                        botspam.send_media_group(massive_big[z][0], sss)
+                        botspam.send_message(massive_big[z][0], txt, reply_markup=ssilki)
                 else:
                     if not p: 
                         botspam.send_message(massive_big[z][0], txt)
@@ -255,14 +257,15 @@ def step6(message):
                 try:
                     if knpk:
                         if not p: 
-                            botspam.send_message(massive_big[z][0], txt, reply_markup=ssilki)
+                            botspam.send_message(x, txt, reply_markup=ssilki)
                         else:
-                            botspam.send_media_group(massive_big[z][0], sss, reply_markup=ssilki)
+                            botspam.send_media_group(x, sss)
+                            botspam.send_message(x, txt, reply_markup=ssilki)
                     else:
                         if not p: 
-                            botspam.send_message(massive_big[z][0], txt)
+                            botspam.send_message(x, txt)
                         else:
-                            botspam.send_media_group(massive_big[z][0], sss)
+                            botspam.send_media_group(x, sss)
                     lost -= 1
                     nice += 1
                     no_send.remove(x)
